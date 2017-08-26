@@ -2,9 +2,10 @@
 
 namespace Tests\Feature;
 
-use Ntupla\Tuple;
 use Ntupla\User;
+use Ntupla\Tuple;
 use Tests\TestCase;
+use Ntupla\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TuplesTest extends TestCase
@@ -34,10 +35,22 @@ class TuplesTest extends TestCase
     public function userCanPublblishATuple()
     {
         $user = factory(User::class)->create();
+        $category = factory(Category::class)->create();
         $this->actingAs($user)
             ->post('/', [
-                'selector' => 'new',
+                'category' => $category->id,
+                'selectors' => 'my-selector',
                 'message' => 'Este es mi primer elemento.'
-            ])->assertStatus(200);
+            ])->assertStatus(302);
+
+        $this->assertDatabaseHas('tuples', [
+            'user_id' => $user->id,
+            'category_id' => $category->id,
+            'message' => 'Este es mi primer elemento.'
+        ]);
+
+        $this->assertDatabaseHas('selectors', [
+            'selector' => 'my-selector'
+        ]);
     }
 }
