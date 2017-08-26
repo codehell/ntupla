@@ -18,14 +18,20 @@ class TuplesTest extends TestCase
      */
     public function userCanViewTuples()
     {
+        $category = factory(Category::class)->create([
+            'predetermined' => 1,
+        ]);
         $tuple = factory(Tuple::class)->create([
-            'message' => 'Primer elemento'
+            'category_id' => $category->id,
+            'message' => 'Primer elemento',
+        ]);
+        factory(Tuple::class)->create([
+            'message' => 'Primer elemento',
         ]);
         $user = $tuple->user;
-        $tuples = Tuple::all();
+        $tuples = $category->tuples();
         $this->actingAs($user)
-            ->get('/', [
-            ])->assertViewHas('tuples', $tuples);
+            ->get('/')->assertViewHas('tuples', $tuples);
     }
 
     /**
@@ -39,7 +45,7 @@ class TuplesTest extends TestCase
         $this->actingAs($user)
             ->post('/', [
                 'category' => $category->id,
-                'selectors' => 'my-selector',
+                'selectors' => 'my-selector my-second-selector',
                 'message' => 'Este es mi primer elemento.'
             ])->assertStatus(302);
 
@@ -51,6 +57,10 @@ class TuplesTest extends TestCase
 
         $this->assertDatabaseHas('selectors', [
             'selector' => 'my-selector'
+        ]);
+
+        $this->assertDatabaseHas('selectors', [
+            'selector' => 'my-second-selector'
         ]);
     }
 }
