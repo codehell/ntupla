@@ -26,12 +26,14 @@ class TuplesTest extends TestCase
             'message' => 'Primer elemento',
         ]);
         factory(Tuple::class)->create([
-            'message' => 'Primer elemento',
+            'message' => 'Segundo elemento',
         ]);
         $user = $tuple->user;
-        $tuples = $category->tuples();
+        $tuples = $category->tuples;
         $this->actingAs($user)
-            ->get('/')->assertViewHas('tuples', $tuples);
+            ->get('/')
+            ->assertViewHas('tuples', $tuples)
+            ->assertSuccessful();
     }
 
     /**

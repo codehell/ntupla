@@ -10,11 +10,16 @@ use Illuminate\Support\Facades\Auth;
 
 class TupleController extends Controller
 {
-    public function index()
+    public function index($slug = null)
     {
-        $tuples = Category::predetermined()->tuples;
+        if (is_null($slug)) {
+            $category = Category::predetermined();
+        } else {
+            $category = Category::categoryBySlug($slug);
+        }
+        $tuples = $category->tuples;
         $categories = Category::all();
-        return view('tuple.index', compact('tuples', 'categories'));
+        return view('tuple.index', compact('tuples', 'categories', 'category'));
     }
 
     public function store(Request $request)

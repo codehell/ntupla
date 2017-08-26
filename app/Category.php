@@ -13,11 +13,11 @@ class Category extends Model
 
     public static function predetermined()
     {
-        return static::where('predetermined', 1)->first();
+        return static::where('predetermined', 1)->firstOrFail();
     }
 
     public static function categoryBySlug($slug)
     {
-        return static::where('slug', $slug)->first();
+        return static::where('slug', $slug)->firstOrFail();
     }
 }

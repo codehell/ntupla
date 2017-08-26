@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('menu')
+    @include('tuple.layouts.menu')
+@endsection
+
 @section('content')
     <div class="container">
         <div class="row">
@@ -32,7 +36,9 @@
                                 <div class="col-md-6">
                                     <select id="category" class="form-control" name="category">
                                         @foreach ($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                            <option value="{{ $category->id }}" {{ $category->predetermined ? 'selected' : '' }}>
+                                                {{ $category->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -63,16 +69,17 @@
                 </div>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Tupla</div>
+                    <div class="panel-heading">Tupla: {{ $category->name }}</div>
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2">
                                 <ul>
                                     @foreach ($tuples as $tuple)
-                                        <li>{{  $tuple->message }}</li>
+                                        <li>{{ $tuple->user->name }}: {{  $tuple->message }}</li>
                                     @endforeach
                                 </ul>
                             </div>

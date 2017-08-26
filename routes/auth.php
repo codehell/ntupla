@@ -4,7 +4,7 @@
  * Rutas accesibles por ususarios identificados
  */
 
-Route::get('/', [
+Route::get('/{slug?}', [
     'uses' => 'TupleController@index',
 ])->name('tuple.index');
 
