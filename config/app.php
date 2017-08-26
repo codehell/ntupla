@@ -170,11 +170,11 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        Ntupla\Providers\AppServiceProvider::class,
+        Ntupla\Providers\AuthServiceProvider::class,
+        // Ntupla\Providers\BroadcastServiceProvider::class,
+        Ntupla\Providers\EventServiceProvider::class,
+        Ntupla\Providers\RouteServiceProvider::class,
 
     ],
 
