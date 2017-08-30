@@ -10,7 +10,10 @@
     </ul>
 </li>
 <li>
-    <form action="{{ route('tuple.index') }}" method="get">
-
+    <form class="navbar-form navbar-left" action="{{ request()->url() }}" method="get">
+        <div class="form-group">
+            <input id="search" type="text" class="form-control" name="search" placeholder="Search" value="{{ request('search') }}">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
     </form>
 </li>

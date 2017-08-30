@@ -2,6 +2,7 @@
 
 namespace Ntupla\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Ntupla\Tuple;
 use Ntupla\Category;
 use Ntupla\Selector;
@@ -10,14 +11,18 @@ use Illuminate\Support\Facades\Auth;
 
 class TupleController extends Controller
 {
-    public function index($slug = null)
+    public function index($slug = null, Request $request)
     {
         if (is_null($slug)) {
             $category = Category::predetermined();
         } else {
             $category = Category::categoryBySlug($slug);
         }
-        $tuples = $category->tuples;
+        if (! $request->has('search')) {
+            $tuples = $category->unselectableTuples()->sortByDesc('created_at');
+        } else {
+            $tuples = $category->selectableTuples($request->search)->sortByDesc('created_at');
+        }
         $categories = Category::all();
         return view('tuple.index', compact('tuples', 'categories', 'category'));
     }
@@ -35,8 +40,8 @@ class TupleController extends Controller
         $tuple->user()->associate($user);
         $category->tuples()->save($tuple);
         if (! is_null($request->selectors)) {
-            Selector::manage($request->selectors, $tuple);
+            $tuple->selectableStore($request->selectors);
         }
-        return redirect()->route('tuple.index')->with('Se creo un nuevo elemento en la categoria '. $category->name);
+        return redirect()->back()->with('Se creo un nuevo elemento en la categoria '. $category->name);
     }
 }

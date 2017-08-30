@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Ntupla\Selector;
 use Ntupla\User;
 use Ntupla\Tuple;
 use Tests\TestCase;
@@ -13,7 +14,6 @@ class TuplesTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @return void
      * @test
      */
     public function userCanViewTuples()
@@ -29,11 +29,12 @@ class TuplesTest extends TestCase
             'message' => 'Segundo elemento',
         ]);
         $user = $tuple->user;
-        $tuples = $category->tuples;
+
         $this->actingAs($user)
             ->get('/')
-            ->assertViewHas('tuples', $tuples)
+            ->assertSee('Primer elemento')
             ->assertSuccessful();
+
     }
 
     /**
@@ -52,6 +53,7 @@ class TuplesTest extends TestCase
             ])->assertStatus(302);
 
         $this->assertDatabaseHas('tuples', [
+            'selectable' => 1,
             'user_id' => $user->id,
             'category_id' => $category->id,
             'message' => 'Este es mi primer elemento.'
@@ -64,5 +66,35 @@ class TuplesTest extends TestCase
         $this->assertDatabaseHas('selectors', [
             'selector' => 'my-second-selector'
         ]);
+        $tuple = Tuple::first();
+        $selector = Selector::first();
+        $this->assertDatabaseHas('selector_tuple', [
+            'tuple_id' => $tuple->id,
+            'selector_id' => $selector->id
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function userCanSearchSelectableTuples()
+    {
+        $category = factory(Category::class)->create([
+            'predetermined' => 1,
+        ]);
+
+        $tuple = factory(Tuple::class)->create([
+            'category_id' => $category->id,
+            'message' => 'Un elemento seleccionable',
+        ]);
+
+        $tuple->selectableStore('my-select');
+
+        $user = $tuple->user;
+
+        $this->actingAs($user)
+            ->get('/')
+            ->assertSee('Un elemento seleccionable')
+            ->assertSuccessful();
     }
 }

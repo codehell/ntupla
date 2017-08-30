@@ -20,4 +20,18 @@ class Category extends Model
     {
         return static::where('slug', $slug)->firstOrFail();
     }
+
+    public function unselectableTuples()
+    {
+        return $this->tuples()->where('selectable', 0)->get();
+    }
+
+    public function selectableTuples($selectors)
+    {
+        $arrySelectors = explode(' ', $selectors);
+        $result = $this->tuples()->whereHas('selectors', function ($query) use ($arrySelectors) {
+            $query->whereIn('selector', $arrySelectors);
+        })->get();
+        return $result;
+    }
 }
