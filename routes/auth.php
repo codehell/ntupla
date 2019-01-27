@@ -4,10 +4,6 @@
  * Rutas accesibles por ususarios identificados
  */
 
-Route::get('/{slug?}', [
-    'uses' => 'TupleController@index',
-])->name('tuple.index');
+Route::get('/{slug?}', 'TupleController@index')->name('tuple.index');
 
-Route::post('/', [
-    'uses' => 'TupleController@store',
-]);
+Route::post('/', 'TupleController@store');

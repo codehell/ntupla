@@ -37,13 +37,4 @@ class Tuple extends Model
             $this->selectors()->attach($actualSelector->id);
         }
     }
-
-    public static function getSelectables($selectors)
-    {
-        $arrySelectors = explode(' ', $selectors);
-        $result = static::whereHas(['selectors' => function ($query) {
-            $query->whereIn('selector', 'kk');
-        }])->get();
-        return $result;
-    }
 }

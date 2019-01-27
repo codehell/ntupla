@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TupleController extends Controller
 {
-    public function index($slug = null, Request $request)
+    public function index(Request $request, $slug = null)
     {
         if (is_null($slug)) {
             $category = Category::predetermined();

@@ -34,7 +34,6 @@ class TuplesTest extends TestCase
             ->get('/')
             ->assertSee('Primer elemento')
             ->assertSuccessful();
-
     }
 
     /**
@@ -93,7 +92,7 @@ class TuplesTest extends TestCase
         $user = $tuple->user;
 
         $this->actingAs($user)
-            ->get('/')
+            ->get('/'.$category->slug.'?search=my-select')
             ->assertSee('Un elemento seleccionable')
             ->assertSuccessful();
     }
